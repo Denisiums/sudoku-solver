@@ -2,9 +2,10 @@ window.onload = function() {
 	console.log('Welcome to the sudoku solver!');
 
 	/* TODO LIST:
-	1) calculate the number of all possible variants;
+	1) calculate the number of all possible variants; (6 * 10^25) too much
 	2) add optional diagonal-checking;
 	3) allow user to set predefined;
+	4) use React for interface;
 	...
 	42) add mobile support or create an app by nativeScript
 
@@ -42,12 +43,15 @@ window.onload = function() {
 	}
 
 	class Sudoku {
-		constructor(grid) {
+		constructor(countMode, grid) {
 			this.grid = grid || Sudoku.getEmptyGrid();
 			this.numbers = this.generateNumbers();
 			this.currentElement = null;
 			this.finished = false;
 			this.lastMove = 'forward'; // forward || back
+			this.countMode = countMode || false;
+			this.count = 0;
+			this.solved = [];
 		}
 
 		static getEmptyGrid() {
@@ -73,9 +77,22 @@ window.onload = function() {
 			this.tryNextValue();
 		}
 
-		finish() {
-			console.log('Finished! ', this.grid);
+		finish(noVariants) {
 			this.finished = true;
+			this.count++;
+			if (this.countMode) {
+				const self = this;
+				return setTimeout(function() {
+					if (noVariants) {
+						return console.log('No more variants. Found: ', this.count);
+					}
+					console.log('count: ', self.count);
+					// self.solved.push([...self.grid]);
+					// console.log('this.solved: ', self.solved);
+					self.finished = false;
+					self.tryNextValue();
+				}, 0);
+			}
 			drawSudoku(this.grid);
 		}
 
@@ -116,7 +133,7 @@ window.onload = function() {
 				return this.currentElement = this.grid[this.currentElement.y - 1][8];
 			}
 
-			this.finish();
+			this.finish(true);
 		}
 
 		tryNextValue() {
@@ -267,6 +284,7 @@ window.onload = function() {
 	}
 
 	const sudoku = new Sudoku();
+	// const sudoku = new Sudoku(true);
 	sudoku.init();
 
 	document.getElementById('start').addEventListener('click', function() {
