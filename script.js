@@ -23,6 +23,12 @@ window.onload = function() {
 		unbanAll() {
 			this.banned = [];
 		}
+
+		setAndLock(value) {
+			if (isNaN(value) || value === null) return;
+			this.locked = true;
+			this.value = value;
+		}
 	}
 
 	class Sudoku {
@@ -142,6 +148,10 @@ window.onload = function() {
 			return result;
 		}
 
+		getElement(x, y) {
+			return this.grid[y][x];
+		}
+
 		setValue(x, y, value) {
 			if (isNaN(value) || !this.isInGrid(x) || !this.isInGrid(y)) return;
 			this.grid[y][x].value = value;
@@ -151,8 +161,6 @@ window.onload = function() {
 			if (!this.isInGrid(x) || !this.isInGrid(y)) return;
 			this.grid[y][x].locked = true;
 		}
-
-
 
 		unlockValue(x, y) {
 			if (!this.isInGrid(x) || !this.isInGrid(y)) return;
