@@ -1,6 +1,16 @@
 window.onload = function() {
 	console.log('Welcome to the sudoku solver!');
 
+	/* TODO LIST:
+	1) calculate the number of all possible variants;
+	2) add optional diagonal-checking;
+	3) allow user to set predefined;
+	...
+	42) add mobile support or create an app by nativeScript
+
+	*/
+
+
 	class Element {
 		constructor(value, x, y, locked) {
 			this.value = value;
@@ -57,6 +67,8 @@ window.onload = function() {
 		}
 
 		start() {
+			// todo: reset grid here?
+			this.finished = false;
 			this.currentElement = this.grid[0][0];
 			this.tryNextValue();
 		}
